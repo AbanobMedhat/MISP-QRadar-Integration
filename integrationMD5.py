@@ -25,8 +25,9 @@ misp_url = "https://" + misp_server + "/attributes/restSearch/json/null/"
 QRadar_POST_url = "https://" + qradar_server + "/api/reference_data/sets/bulk_load/" + qradar_ref_set
 
 MISP_POSTData = {
-    "timestamp": "1d",
-    "category": "Network activity"
+    "timestamp": "1d                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ",
+    "category": "Payload delivery",
+    "type": "md5"
     }
     
 MISP_headers = {
@@ -90,13 +91,12 @@ def qradar_post_IP(ioc_cleaned_data, ioc_count_cleaned):
     qradar_response = requests.request("POST", QRadar_POST_url, data=ioc_cleaned_data, headers=QRadar_headers, verify=False)
     if qradar_response.status_code == 200:
         print(time.strftime("%H:%M:%S") + " -- " + "Imported " + str(ioc_count_cleaned) + " IOCs to QRadar (Success)" )
-        print(time.strftime("%H:%M:%S") + " -- " + "Waiting to next schedule in " + str(frequency) + "minutes")
     else:
-        print(time.strftime("%H:%M:%S") + " -- " + "Could not POST IOCs to QRadar (Failure)")   
-      
+        print(time.strftime("%H:%M:%S") + " -- " + "Could not POST IOCs to QRadar (Failure)")
 
 def qradar_post_all(import_data, ioc_count):
     print(time.strftime("%H:%M:%S") + " -- " + "Initiating, IOC POST to QRadar ")
+    print(type(import_data))
     qradar_response = requests.request("POST", QRadar_POST_url, data=import_data, headers=QRadar_headers, verify=False)
     if qradar_response.status_code == 200:
         print(time.strftime("%H:%M:%S") + " -- " + " (Finished) Imported " + str(ioc_count) + " IOCs to QRadar (Success)" )
@@ -127,4 +127,3 @@ def socket_check_misp():
 scheduler = BlockingScheduler()
 scheduler.add_job(socket_check_qradar, 'interval', minutes=frequency, next_run_time=datetime.datetime.now())
 scheduler.start()
-
